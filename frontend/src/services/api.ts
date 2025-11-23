@@ -64,7 +64,7 @@ api.interceptors.response.use(
     // If no response, it's likely a network error
     if (!error.response) {
       console.error('Network error - backend may not be running');
-      error.message = 'Cannot connect to server. Make sure the backend is running on http://localhost:8000';
+      error.message = `Cannot connect to server at ${API_URL}. Please verify the backend is accessible.`;
     }
     
     return Promise.reject(error);
