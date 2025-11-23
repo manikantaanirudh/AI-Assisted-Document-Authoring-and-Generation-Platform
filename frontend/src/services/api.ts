@@ -1,19 +1,25 @@
 import axios from 'axios';
 
-// Determine API base URL.
-// Priority: build-time env var -> smart Render fallback -> localhost.
+// Determine API base URL with enhanced diagnostics.
+// Order: explicit env var -> forced Render hostname rewrite -> localhost.
 let API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
-if (!process.env.REACT_APP_API_URL && typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   const host = window.location.hostname;
-  // If running on Render without env var, attempt heuristic mapping from frontend to backend.
-  // Example: document-platform-frontend.onrender.com -> document-platform-backend.onrender.com
-  if (host.endsWith('onrender.com')) {
+  // Force rewrite if we detect a Render frontend host.
+  if (host.includes('onrender.com') && host.includes('frontend')) {
     const backendHost = host.replace('frontend', 'backend');
     API_URL = `https://${backendHost}`;
     // eslint-disable-next-line no-console
-    console.warn('[API] Using heuristic backend URL fallback:', API_URL);
+    console.log('[API] Render host detected. Using backend URL:', API_URL);
+  } else if (!process.env.REACT_APP_API_URL && host !== 'localhost') {
+    // Non-local host but no env var: warn.
+    // eslint-disable-next-line no-console
+    console.warn('[API] No REACT_APP_API_URL set. Host:', host, 'Using default:', API_URL);
   }
+  // Expose for manual browser inspection.
+  // @ts-ignore
+  window.__API_URL__ = API_URL;
 }
 
 const api = axios.create({
