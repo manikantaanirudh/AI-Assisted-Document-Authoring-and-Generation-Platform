@@ -1,7 +1,20 @@
 import axios from 'axios';
 
-// Use environment variable for production, fallback to localhost for development
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+// Determine API base URL.
+// Priority: build-time env var -> smart Render fallback -> localhost.
+let API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+
+if (!process.env.REACT_APP_API_URL && typeof window !== 'undefined') {
+  const host = window.location.hostname;
+  // If running on Render without env var, attempt heuristic mapping from frontend to backend.
+  // Example: document-platform-frontend.onrender.com -> document-platform-backend.onrender.com
+  if (host.endsWith('onrender.com')) {
+    const backendHost = host.replace('frontend', 'backend');
+    API_URL = `https://${backendHost}`;
+    // eslint-disable-next-line no-console
+    console.warn('[API] Using heuristic backend URL fallback:', API_URL);
+  }
+}
 
 const api = axios.create({
   baseURL: `${API_URL}/api/v1`,
