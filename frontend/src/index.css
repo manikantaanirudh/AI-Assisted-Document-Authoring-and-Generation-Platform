@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-black text-white font-body;
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: linear-gradient(to bottom, #000000, #0D0D0D, #000000);
+    min-height: 100vh;
+  }
+
+  code {
+    font-family: 'Inter', source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+}
+
+@layer components {
+  /* Premium Glass Card */
+  .glass-card {
+    @apply bg-black/40 backdrop-blur-xl border border-white/5 rounded-lg;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.06);
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300;
+  }
+
+  .glass-card-hover:hover {
+    @apply translate-y-[-4px] border-white/10;
+    box-shadow: 0 0 60px rgba(255, 255, 255, 0.12);
+  }
+
+  /* Premium Button Styles */
+  .btn-premium {
+    @apply px-6 py-3 rounded-lg font-semibold text-sm transition-all duration-300;
+    @apply border border-white/10 bg-black/60 backdrop-blur-sm;
+  }
+
+  .btn-premium:hover {
+    @apply border-white/30 bg-white/10;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .btn-premium-black {
+    @apply px-6 py-3 rounded-lg font-semibold text-sm transition-all duration-300;
+    @apply bg-black text-white border border-white/20;
+  }
+
+  .btn-premium-black:hover {
+    @apply bg-white text-black border-white;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .btn-premium-white {
+    @apply px-6 py-3 rounded-lg font-semibold text-sm transition-all duration-300;
+    @apply bg-white text-black border border-black/20;
+  }
+
+  .btn-premium-white:hover {
+    @apply bg-black text-white border-white;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+
+  /* Premium Input Styles */
+  .input-premium {
+    @apply w-full px-4 py-3 rounded-lg bg-black/40 backdrop-blur-sm;
+    @apply border border-white/10 text-white placeholder-white/40;
+    @apply focus:outline-none focus:border-white/30 focus:ring-0;
+    @apply transition-all duration-300;
+  }
+
+  .input-premium:focus {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  }
+
+  /* Premium Text Styles */
+  .text-display {
+    @apply text-display-1 font-display;
+  }
+
+  /* Premium Badge */
+  .badge-premium {
+    @apply px-3 py-1 rounded-full text-xs font-semibold;
+    @apply border border-white/20 bg-black/40 backdrop-blur-sm;
+  }
+
+  /* Premium Navbar */
+  .nav-premium {
+    @apply bg-black/60 backdrop-blur-xl border-b border-white/5;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+  }
+
+  /* Premium Section Card */
+  .section-card {
+    @apply glass-card p-6 transition-all duration-300;
+  }
+
+  .section-card:hover {
+    @apply translate-y-[-2px] border-white/10;
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.08);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
