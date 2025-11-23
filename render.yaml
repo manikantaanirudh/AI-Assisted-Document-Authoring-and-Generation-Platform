@@ -1,0 +1,76 @@
+services:
+  # PostgreSQL Database
+  - type: pserv
+    name: document-platform-db
+    env: docker
+    plan: free
+    region: oregon
+    ipAllowList: []
+
+  # FastAPI Backend
+  - type: web
+    name: document-platform-backend
+    env: python
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: document-platform-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_ALGORITHM
+        value: HS256
+      - key: JWT_ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 30
+      - key: LLM_PROVIDER
+        value: gemini
+      - key: LLM_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: EXPORT_TMP_DIR
+        value: ./exports
+      - key: FRONTEND_URL
+        value: https://document-platform-frontend.onrender.com
+      - key: BACKEND_URL
+        fromService:
+          type: web
+          name: document-platform-backend
+          property: host
+      - key: CORS_ORIGINS
+        value: https://document-platform-frontend.onrender.com
+    healthCheckPath: /health
+
+  # React Frontend
+  - type: web
+    name: document-platform-frontend
+    env: static
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/build
+    envVars:
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: document-platform-backend
+          property: host
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
